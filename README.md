@@ -4,9 +4,9 @@ A simple study tracker for the Engineering Design 2 AI software assignment.
 
 ## Current status
 
-Phase 1's Flask home page is working. Phase 2's Supabase connection code and
-database setup script are implemented; completion requires running the schema
-in a Supabase project and passing the live connection check below.
+Phases 1 and 2 are complete. The Flask home page works, the `study-tracker`
+Supabase project is configured, and `schema.sql` has been applied. The live
+Flask-to-Supabase connection check passed on September 25, 2026.
 Authentication and study session management come in later phases.
 
 ## Local setup
@@ -62,8 +62,8 @@ The schema uses [Supabase row-level security](https://supabase.com/docs/guides/d
 python -m unittest discover -s tests -v
 ```
 
-These tests use a mocked Supabase client; the live check above is still required
-before marking Phase 2 complete.
+These tests use a mocked Supabase client. Run the live check above separately
+after changing project settings or setting up another Supabase project.
 
 ## Development plan
 

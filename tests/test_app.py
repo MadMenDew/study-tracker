@@ -42,6 +42,14 @@ class SupabaseSetupTests(unittest.TestCase):
         create.return_value.table.assert_called_once_with("study_sessions")
 
     @patch("app.create_client")
+    def test_invalid_configuration_does_not_expose_details(self, create):
+        create.side_effect = ValueError("private-key")
+        result = app.test_cli_runner().invoke(args=["check-supabase"])
+        self.assertNotEqual(result.exit_code, 0)
+        self.assertIn("Could not initialize Supabase", result.output)
+        self.assertNotIn("private-key", result.output)
+
+    @patch("app.create_client")
     def test_remote_failure_does_not_expose_details(self, create):
         query = create.return_value.table.return_value.select.return_value
         query.limit.return_value.execute.side_effect = RuntimeError("private-key")

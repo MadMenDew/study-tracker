@@ -402,6 +402,11 @@ Completion check:
 
 ## Phase 2 — Connect Supabase
 
+Status: Complete (September 25, 2026). The `study-tracker` Supabase project is
+configured, environment variables are stored in the ignored local `.env`, and
+`schema.sql` has been applied with row-level security policies. The live
+`flask --app app check-supabase` command passed. Authentication is next (Phase 3).
+
 Goal:
 
 Connect Flask to Supabase.
