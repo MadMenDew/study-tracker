@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Study Tracker{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body><main>
+  <h1>Study Tracker</h1>
+  {% for message in get_flashed_messages() %}<p role="status" class="message">{{ message }}</p>{% endfor %}
+  {% block content %}{% endblock %}
+</main></body>
+</html>

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Create an account · Study Tracker{% endblock %}
+{% block content %}
+<h2>Create an account</h2>
+<form method="post">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <label for="email">Email</label>
+  <input id="email" name="email" type="email" autocomplete="email" maxlength="254" required value="{{ request.form.get('email', '') }}">
+  <label for="password">Password (at least 8 characters)</label>
+  <input id="password" name="password" type="password" autocomplete="new-password" minlength="8" maxlength="128" required>
+  <button type="submit">Create an account</button>
+</form>
+<p><a href="{{ url_for('login') }}">Already have an account? Log in</a></p>
+{% endblock %}

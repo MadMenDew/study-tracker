@@ -433,6 +433,11 @@ Completion check:
 
 ## Phase 3 — Authentication
 
+Status: Implemented; live acceptance verification pending. Registration, login,
+POST logout, CSRF protection, and a Supabase-verified dashboard are implemented.
+All 17 automated tests pass. Local browser redirect protection was verified;
+the live account registration/login/logout cycle still needs completion.
+
 Goal:
 
 Complete authentication before building study session CRUD.

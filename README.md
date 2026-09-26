@@ -7,7 +7,9 @@ A simple study tracker for the Engineering Design 2 AI software assignment.
 Phases 1 and 2 are complete. The Flask home page works, the `study-tracker`
 Supabase project is configured, and `schema.sql` has been applied. The live
 Flask-to-Supabase connection check passed on September 25, 2026.
-Authentication and study session management come in later phases.
+Phase 3 authentication is implemented and passes 17 automated tests; live
+registration, confirmation, login, and logout verification is pending.
+Study session management comes in later phases.
 
 ## Local setup
 
@@ -22,8 +24,8 @@ python -m flask --app app run
 
 Open http://127.0.0.1:5000 in your browser. Press Ctrl+C to stop the server.
 
-The home page still works without credentials. Keep credentials in `.env`, which
-is excluded from Git.
+Configure `.env` using the setup below before using authentication. Keep
+credentials in `.env`, which is excluded from Git. The dashboard requires login.
 
 ## Supabase setup (Phase 2)
 
@@ -55,6 +57,31 @@ is excluded from Git.
 
 Client initialization follows the [Supabase Python documentation](https://supabase.com/docs/reference/python/initializing).
 The schema uses [Supabase row-level security](https://supabase.com/docs/guides/database/postgres/row-level-security).
+
+## Authentication (Phase 3)
+
+- Open `/register` to create an account with an email and a password of at least
+  8 characters. If Supabase requires email confirmation, confirm the email and
+  return to `/login`. Existing accounts can use `/login` directly.
+- In Supabase Authentication → URL Configuration, set Site URL to
+  `http://127.0.0.1:5000/login` for local development (configured for this project).
+  Use the deployed HTTPS login URL when deploying.
+- The dashboard validates the access token with Supabase on every visit. The
+  signed, HttpOnly, SameSite cookie stores only the access token, not passwords
+  or refresh tokens. Login is required again when the token or one-hour cookie
+  expires. Set `FLASK_COOKIE_SECURE=1` when deploying over HTTPS.
+- Logout is a CSRF-protected POST. It clears the browser session and asks
+  Supabase to revoke that login's remote session. Supabase access tokens remain
+  valid until their expiry, so keep cookies private.
+- Supabase's default email service may restrict delivery or rate-limit signup.
+  Configure custom SMTP before supporting public registration.
+
+Live acceptance check: register, confirm email if needed, log in, log out,
+visit `/` and verify the redirect to `/login`, then log in again.
+
+References: [Supabase signup](https://supabase.com/docs/reference/python/auth-signup),
+[password login](https://supabase.com/docs/reference/python/auth-signinwithpassword),
+and [logout](https://supabase.com/docs/reference/python/auth-signout).
 
 ## Local tests
 

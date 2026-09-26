@@ -16,7 +16,7 @@ class SupabaseSetupTests(unittest.TestCase):
 
     def test_home_without_credentials(self):
         app.config.update(SUPABASE_URL="", SUPABASE_KEY="")
-        self.assertEqual(app.test_client().get("/").status_code, 200)
+        self.assertEqual(app.test_client().get("/").location, "/login")
 
     def test_missing_configuration(self):
         app.config["SUPABASE_KEY"] = ""

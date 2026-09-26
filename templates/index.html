@@ -1,16 +1,10 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Study Tracker</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  </head>
-  <body>
-    <main>
-      <h1>Study Tracker</h1>
-      <p>A simple place to record and manage your study sessions.</p>
-      <p>Account registration and study session tracking are coming soon.</p>
-    </main>
-  </body>
-</html>
+{% extends "base.html" %}
+{% block content %}
+<h2>Your dashboard</h2>
+<p>Welcome, {{ g.user.email }}</p>
+<p>You’re signed in. Study session tracking is coming in the next phase.</p>
+<form method="post" action="{{ url_for('logout') }}">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <button type="submit">Log out</button>
+</form>
+{% endblock %}
