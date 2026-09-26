@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 from flask import Flask, g, render_template, request, session, redirect, url_for, flash, abort
 from supabase import create_client
 from supabase.client import ClientOptions
+from supabase_auth.errors import AuthApiError
 
 load_dotenv(Path(__file__).with_name(".env"))
 
@@ -160,8 +161,16 @@ def login():
             result = get_supabase().auth.sign_in_with_password(values)
             if not result.session:
                 raise ValueError("Missing session")
+        except AuthApiError as error:
+            messages = {
+                "email_not_confirmed": "Confirm your email before logging in. Open the confirmation email from Supabase (check spam too), click its link, then return here.",
+                "invalid_credentials": "The email or password is incorrect. Please try again.",
+                "over_request_rate_limit": "Too many login attempts. Please wait a few minutes and try again.",
+            }
+            flash(messages.get(error.code, "Unable to log in right now. Please try again later."))
+            return render_template("login.html"), 400
         except Exception:
-            flash("Unable to log in. Check your email and password, confirm your email, or try again later.")
+            flash("The authentication service could not be reached. Please try again shortly.")
             return render_template("login.html"), 400
         start_session(result.session)
         return redirect(url_for("index"))

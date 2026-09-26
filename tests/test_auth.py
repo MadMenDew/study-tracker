@@ -3,6 +3,7 @@ from types import SimpleNamespace
 from unittest.mock import patch
 
 from app import app
+from supabase_auth.errors import AuthApiError
 
 
 class AuthenticationTests(unittest.TestCase):
@@ -72,6 +73,15 @@ class AuthenticationTests(unittest.TestCase):
         self.assertEqual(self.client.get('/').location, '/login')
         with self.client.session_transaction() as sess:
             self.assertNotIn('access_token', sess)
+
+    def test_unconfirmed_email_has_actionable_message(self):
+        self.backend.auth.sign_in_with_password.side_effect = AuthApiError(
+            'private diagnostic', 400, 'email_not_confirmed')
+        response = self.login()
+        self.assertEqual(response.status_code, 400)
+        self.assertIn(b'Confirm your email before logging in', response.data)
+        self.assertNotIn(b'private diagnostic', response.data)
+        self.assertEqual(self.client.get('/').location, '/login')
 
     def test_csrf_required_for_all_posts(self):
         for path in ('/login', '/register', '/logout'):
