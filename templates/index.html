@@ -1,8 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Your dashboard</h2>
-<p>Welcome, {{ g.user.email }}</p>
-<h2>Add Study Session</h2>
+<div class="dashboard-heading"><div><p class="eyebrow">Make time for what matters</p><h2>Your study space</h2>
+<p class="muted">{{ g.user.email }}</p></div><form method="post" action="{{ url_for('logout') }}">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <button class="secondary" type="submit">Log out</button>
+</form>
+</div>
+<div class="dashboard-grid"><section class="panel add-panel">
+<h2>Add Study Session</h2><p class="muted">Every session is a step forward.</p>
 <form method="post" action="{{ url_for('add') }}">
   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
   <label for="subject">Subject</label>
@@ -15,18 +20,18 @@
   <textarea id="notes" name="notes" rows="4" maxlength="5000">{{ request.form.get('notes', '') }}</textarea>
   <button type="submit">Add Session</button>
 </form>
-<h2>Your Study Sessions</h2>
+</section><section><p class="eyebrow">Your progress, recorded</p><h2>Your Study Sessions</h2>
 {% if records is none %}
 <p>Your sessions are temporarily unavailable.</p>
 {% elif not records %}
-<p>No study sessions yet. Add your first session above.</p>
+<p class="empty-state">No study sessions yet.<br>Add your first session to get started.</p>
 {% else %}
 {% for record in records %}
 <article class="study-session">
   <h3>{{ record.subject }}</h3>
   <p>{{ record.minutes }} minutes · <time datetime="{{ record.study_date }}">{{ record.study_date }}</time></p>
   {% if record.notes %}<p class="notes">{{ record.notes }}</p>{% endif %}
-  <a href="{{ url_for('edit', session_id=record.id) }}">Edit</a>
+  <div class="session-actions"><a href="{{ url_for('edit', session_id=record.id) }}">Edit</a>
   <details>
     <summary>Delete</summary>
     <p>Delete this study session permanently?</p>
@@ -34,12 +39,9 @@
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
       <button type="submit">Confirm delete</button>
     </form>
-  </details>
+  </details></div>
 </article>
 {% endfor %}
 {% endif %}
-<form method="post" action="{{ url_for('logout') }}">
-  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-  <button type="submit">Log out</button>
-</form>
+</section></div>
 {% endblock %}

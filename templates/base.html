@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body><main>
-  <h1>Study Tracker</h1>
+  <header class="site-header"><span class="brand-mark" aria-hidden="true">✓</span><h1>Study Tracker</h1></header>
   {% for message in get_flashed_messages() %}<p role="status" class="message">{{ message }}</p>{% endfor %}
   {% block content %}{% endblock %}
 </main></body>

@@ -520,8 +520,8 @@ Completion check:
 
 ## Phase 5 — Update and Delete
 
-Status: Implemented with 33 passing automated tests. Live edit/delete verification
-is pending. Both routes check ownership and scope mutations to the authenticated
+Status: Complete. Live edit/delete was verified by the user; 33 automated tests
+pass. Both routes check ownership and scope mutations to the authenticated
 user; edits share create validation and deletion uses a CSRF-protected POST.
 
 Goal:
@@ -557,6 +557,10 @@ DELETE ✅
 ---
 
 ## Phase 6 — Basic Styling
+
+Status: Complete. Responsive dark styling with pink accents, session cards,
+consistent authentication/edit forms, and visible keyboard focus. Desktop and
+phone-width dashboard layouts and the login page were visually checked.
 
 Only begin this phase after the full application works.
 

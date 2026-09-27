@@ -8,8 +8,9 @@ Phases 1 and 2 are complete. The Flask home page works, the `study-tracker`
 Supabase project is configured, and `schema.sql` has been applied. The live
 Flask-to-Supabase connection check passed on September 25, 2026.
 Phases 3 and 4 are complete, including live verification reported by the user.
-Phase 5 edit/delete is implemented with ownership checks and 33 passing tests.
-Live edit/delete verification remains pending. Styling and deployment are next.
+Phase 5 edit/delete was verified by the user. Phase 6 styling is complete, with
+a responsive dark theme, pink accents, clear forms, and session cards. All 33
+tests pass. Deployment is next.
 
 ## Local setup
 
@@ -109,7 +110,7 @@ No database migration is required.
 
 Live check: edit a session and refresh, delete a disposable session and refresh,
 and verify a second account cannot open or modify the first account's session
-using its ID. These live checks remain pending; automated tests cover the routes,
+using its ID. The user verified the live edit/delete flow; automated tests cover the routes,
 validation, ownership filters, missing records, and backend failures.
 
 ## Local tests
