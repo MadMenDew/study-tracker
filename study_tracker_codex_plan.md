@@ -588,8 +588,9 @@ Improve study tracker interface
 
 ## Phase 7 — Deployment
 
-Status: Deployment files prepared and production configuration checked.
-Render sign-in, service creation, and deployed acceptance tests are pending.
+Status: Deployed at https://study-tracker-a8v9.onrender.com on September 27, 2026.
+HTTPS login and logged-out redirects verified; Supabase confirmation return URL
+configured. Hosted registration/authentication/CRUD acceptance tests remain.
 
 Goal:
 

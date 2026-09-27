@@ -10,7 +10,7 @@ Flask-to-Supabase connection check passed on September 25, 2026.
 Phases 3 and 4 are complete, including live verification reported by the user.
 Phase 5 edit/delete was verified by the user. Phase 6 styling is complete, with
 a responsive dark theme, pink accents, clear forms, and session cards. All 33
-tests pass. Deployment is next.
+tests pass. The app is deployed on Render; hosted authentication/CRUD acceptance checks remain.
 
 ## Local setup
 
@@ -65,8 +65,9 @@ The schema uses [Supabase row-level security](https://supabase.com/docs/guides/d
   8 characters. If Supabase requires email confirmation, confirm the email and
   return to `/login`. Existing accounts can use `/login` directly.
 - In Supabase Authentication → URL Configuration, set Site URL to
-  `http://127.0.0.1:5000/login` for local development (configured for this project).
-  Use the deployed HTTPS login URL when deploying.
+  `https://study-tracker-a8v9.onrender.com/login` for this deployed project.
+  This is already configured. Local login still works; confirmation emails return
+  to the hosted website.
 - The dashboard validates the access token with Supabase on every visit. The
   signed, HttpOnly, SameSite cookie stores only the access token, not passwords
   or refresh tokens. Login is required again when the token or one-hour cookie
@@ -124,8 +125,11 @@ after changing project settings or setting up another Supabase project.
 
 ## Deployment (Phase 7)
 
-Deployment preparation is complete; the Render service and live verification
-are pending. [render.yaml](render.yaml) configures a free Python web service,
+Live website: https://study-tracker-a8v9.onrender.com
+
+Deployed September 27, 2026. HTTPS login and the logged-out dashboard redirect
+were verified. Authenticated CRUD and new-registration acceptance checks on the
+hosted app remain pending. [render.yaml](render.yaml) configures a free Python web service,
 Gunicorn, a generated session secret, and HTTPS-only session cookies.
 
 1. Push the code to GitHub and create a Render Blueprint from this repository.
