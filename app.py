@@ -210,9 +210,7 @@ def dashboard(status=200):
     return render_template("index.html", records=records, today=date.today().isoformat()), status
 
 
-@app.post("/add")
-@login_required
-def add():
+def study_session_values():
     subject = request.form.get("subject", "").strip()
     minutes_text = request.form.get("minutes", "").strip()
     study_date = request.form.get("study_date", "").strip()
@@ -230,22 +228,84 @@ def add():
         errors.append("Enter a valid study date.")
     if len(notes) > 5000:
         errors.append("Keep notes to 5000 characters or fewer.")
+    return {
+        "subject": subject,
+        "minutes": int(minutes_text) if not errors else None,
+        "study_date": study_date,
+        "notes": notes or None,
+    }, errors
+
+
+@app.post("/add")
+@login_required
+def add():
+    values, errors = study_session_values()
     if errors:
         for error in errors:
             flash(error)
         return dashboard(400)
     try:
         get_supabase().table("study_sessions").insert({
-            "user_id": g.user.id,
-            "subject": subject,
-            "minutes": int(minutes_text),
-            "study_date": study_date,
-            "notes": notes or None,
+            **values, "user_id": g.user.id,
         }).execute()
     except Exception:
         flash("We could not confirm that your session was saved. Check your list before trying again.")
         return dashboard(503)
     flash("Study session added.")
+    return redirect(url_for("index"))
+
+
+def owned_session(session_id):
+    try:
+        records = (get_supabase().table("study_sessions")
+                   .select("id,subject,minutes,study_date,notes")
+                   .eq("id", str(session_id)).eq("user_id", g.user.id)
+                   .execute().data)
+    except Exception:
+        abort(503, "The session could not be loaded. Please try again.")
+    if not records:
+        abort(404, "Study session not found.")
+    return records[0]
+
+
+@app.route("/edit/<uuid:session_id>", methods=["GET", "POST"])
+@login_required
+def edit(session_id):
+    record = owned_session(session_id)
+    if request.method == "GET":
+        return render_template("edit.html", record=record)
+    values, errors = study_session_values()
+    if errors:
+        for error in errors:
+            flash(error)
+        return render_template("edit.html", record=record), 400
+    try:
+        result = (get_supabase().table("study_sessions").update(values)
+                  .eq("id", str(session_id)).eq("user_id", g.user.id)
+                  .execute())
+    except Exception:
+        flash("We could not confirm your changes were saved. Check your dashboard before trying again.")
+        return render_template("edit.html", record=record), 503
+    if not result.data:
+        abort(404, "Study session not found.")
+    flash("Study session updated.")
+    return redirect(url_for("index"))
+
+
+@app.post("/delete/<uuid:session_id>")
+@login_required
+def delete(session_id):
+    owned_session(session_id)
+    try:
+        result = (get_supabase().table("study_sessions").delete()
+                  .eq("id", str(session_id)).eq("user_id", g.user.id)
+                  .execute())
+    except Exception:
+        flash("We could not confirm the deletion. Check your list before trying again.")
+        return dashboard(503)
+    if not result.data:
+        abort(404, "Study session not found.")
+    flash("Study session deleted.")
     return redirect(url_for("index"))
 
 

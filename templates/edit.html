@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Edit session · Study Tracker{% endblock %}
+{% block content %}
+<h2>Edit Study Session</h2>
+<form method="post">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <label for="subject">Subject</label>
+  <input id="subject" name="subject" required maxlength="120" value="{{ request.form.get('subject', record.subject) }}">
+  <label for="minutes">Minutes studied</label>
+  <input id="minutes" name="minutes" type="number" min="1" max="1440" step="1" required value="{{ request.form.get('minutes', record.minutes) }}">
+  <label for="study_date">Study date</label>
+  <input id="study_date" name="study_date" type="date" required value="{{ request.form.get('study_date', record.study_date) }}">
+  <label for="notes">Notes (optional)</label>
+  <textarea id="notes" name="notes" rows="4" maxlength="5000">{{ request.form.get('notes', record.notes or '') }}</textarea>
+  <button type="submit">Save changes</button>
+  <a href="{{ url_for('index') }}">Cancel</a>
+</form>
+{% endblock %}

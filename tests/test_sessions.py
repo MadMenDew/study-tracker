@@ -31,7 +31,7 @@ class StudySessionTests(unittest.TestCase):
         self.backend.postgrest.auth.assert_called_with('owner-token')
 
     def test_read_is_filtered_and_escapes_content(self):
-        self.result.return_value.data = [dict(subject='<script>alert(1)</script>', minutes=60, study_date='2026-09-25', notes='<b>notes</b>')]
+        self.result.return_value.data = [dict(id='11111111-1111-4111-8111-111111111111', subject='<script>alert(1)</script>', minutes=60, study_date='2026-09-25', notes='<b>notes</b>')]
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
         self.table.select.return_value.eq.assert_called_once_with('user_id', 'owner')
@@ -80,7 +80,7 @@ class StudySessionTests(unittest.TestCase):
 
     def test_saved_record_is_read_on_refresh_and_another_user_has_different_filter(self):
         records = []
-        self.table.insert.side_effect = lambda payload: SimpleNamespace(execute=lambda: records.append(payload))
+        self.table.insert.side_effect = lambda payload: SimpleNamespace(execute=lambda: records.append({**payload, 'id': '11111111-1111-4111-8111-111111111111'}))
         def filtered(column, owner):
             query = MagicMock()
             query.order.return_value.order.return_value.execute.return_value = SimpleNamespace(data=[r for r in records if r['user_id'] == owner])

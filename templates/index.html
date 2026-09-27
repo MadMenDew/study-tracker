@@ -26,6 +26,15 @@
   <h3>{{ record.subject }}</h3>
   <p>{{ record.minutes }} minutes · <time datetime="{{ record.study_date }}">{{ record.study_date }}</time></p>
   {% if record.notes %}<p class="notes">{{ record.notes }}</p>{% endif %}
+  <a href="{{ url_for('edit', session_id=record.id) }}">Edit</a>
+  <details>
+    <summary>Delete</summary>
+    <p>Delete this study session permanently?</p>
+    <form method="post" action="{{ url_for('delete', session_id=record.id) }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button type="submit">Confirm delete</button>
+    </form>
+  </details>
 </article>
 {% endfor %}
 {% endif %}

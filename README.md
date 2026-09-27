@@ -7,10 +7,9 @@ A simple study tracker for the Engineering Design 2 AI software assignment.
 Phases 1 and 2 are complete. The Flask home page works, the `study-tracker`
 Supabase project is configured, and `schema.sql` has been applied. The live
 Flask-to-Supabase connection check passed on September 25, 2026.
-Phase 3 authentication and Phase 4 create/read study sessions are implemented.
-All 26 automated tests pass. Live registration and login have succeeded; live
-logout, session persistence, and two-account isolation checks remain pending.
-Edit and delete actions come in Phase 5.
+Phases 3 and 4 are complete, including live verification reported by the user.
+Phase 5 edit/delete is implemented with ownership checks and 33 passing tests.
+Live edit/delete verification remains pending. Styling and deployment are next.
 
 ## Local setup
 
@@ -95,10 +94,23 @@ The server assigns the verified user's ID to inserts and filters reads by that
 ID. Each query also uses the user's JWT so the existing row-level security
 policies apply. No database migration is needed for this phase.
 
-Live acceptance check: add a session, refresh to verify persistence, then sign
-in with a second account and verify the first account's sessions are hidden.
+The user verified adding sessions, refresh persistence, and isolation between
+two accounts.
 Automated tests cover these application behaviors with a mocked backend; they
 do not substitute for the live two-account database check.
+
+## Edit and delete (Phase 5)
+
+Use **Edit** beside a session to change its fields, then **Save changes** or
+**Cancel**. Open **Delete** and choose **Confirm delete** to permanently remove
+that session. Both operations require login, CSRF protection, and a matching
+user ID on the lookup and mutation; Supabase row-level security also applies.
+No database migration is required.
+
+Live check: edit a session and refresh, delete a disposable session and refresh,
+and verify a second account cannot open or modify the first account's session
+using its ID. These live checks remain pending; automated tests cover the routes,
+validation, ownership filters, missing records, and backend failures.
 
 ## Local tests
 
