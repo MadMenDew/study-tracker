@@ -1,7 +1,7 @@
 import os
 import re
 import secrets
-from datetime import timedelta
+from datetime import date, timedelta
 from functools import wraps
 from pathlib import Path
 
@@ -104,7 +104,7 @@ def login_required(view):
             if not user:
                 raise ValueError("Missing user")
             g.user = user
-            # Future CRUD queries use the verified user's JWT for RLS.
+            # Study-session queries use the verified user's JWT for RLS.
             client.postgrest.auth(token)
         except Exception:
             session.clear()
@@ -193,7 +193,60 @@ def logout():
 @app.get("/")
 @login_required
 def index():
-    return render_template("index.html")
+    return dashboard()
+
+
+def dashboard(status=200):
+    try:
+        records = (get_supabase().table("study_sessions")
+                   .select("id,subject,minutes,study_date,notes")
+                   .eq("user_id", g.user.id)
+                   .order("study_date", desc=True)
+                   .order("created_at", desc=True).execute().data)
+    except Exception:
+        records = None
+        flash("Your study sessions could not be loaded. Please refresh to try again.")
+        status = 503
+    return render_template("index.html", records=records, today=date.today().isoformat()), status
+
+
+@app.post("/add")
+@login_required
+def add():
+    subject = request.form.get("subject", "").strip()
+    minutes_text = request.form.get("minutes", "").strip()
+    study_date = request.form.get("study_date", "").strip()
+    notes = request.form.get("notes", "").strip()
+    errors = []
+    if not subject or len(subject) > 120:
+        errors.append("Enter a subject between 1 and 120 characters.")
+    if not re.fullmatch(r"[0-9]{1,4}", minutes_text) or not 1 <= int(minutes_text) <= 1440:
+        errors.append("Minutes must be a whole number between 1 and 1440.")
+    try:
+        if not re.fullmatch(r"[0-9]{4}-[0-9]{2}-[0-9]{2}", study_date):
+            raise ValueError
+        date.fromisoformat(study_date)
+    except ValueError:
+        errors.append("Enter a valid study date.")
+    if len(notes) > 5000:
+        errors.append("Keep notes to 5000 characters or fewer.")
+    if errors:
+        for error in errors:
+            flash(error)
+        return dashboard(400)
+    try:
+        get_supabase().table("study_sessions").insert({
+            "user_id": g.user.id,
+            "subject": subject,
+            "minutes": int(minutes_text),
+            "study_date": study_date,
+            "notes": notes or None,
+        }).execute()
+    except Exception:
+        flash("We could not confirm that your session was saved. Check your list before trying again.")
+        return dashboard(503)
+    flash("Study session added.")
+    return redirect(url_for("index"))
 
 
 if __name__ == "__main__":

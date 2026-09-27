@@ -2,7 +2,33 @@
 {% block content %}
 <h2>Your dashboard</h2>
 <p>Welcome, {{ g.user.email }}</p>
-<p>You’re signed in. Study session tracking is coming in the next phase.</p>
+<h2>Add Study Session</h2>
+<form method="post" action="{{ url_for('add') }}">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <label for="subject">Subject</label>
+  <input id="subject" name="subject" required maxlength="120" value="{{ request.form.get('subject', '') }}">
+  <label for="minutes">Minutes studied</label>
+  <input id="minutes" name="minutes" type="number" min="1" max="1440" step="1" required value="{{ request.form.get('minutes', '') }}">
+  <label for="study_date">Study date</label>
+  <input id="study_date" name="study_date" type="date" required value="{{ request.form.get('study_date', today) }}">
+  <label for="notes">Notes (optional)</label>
+  <textarea id="notes" name="notes" rows="4" maxlength="5000">{{ request.form.get('notes', '') }}</textarea>
+  <button type="submit">Add Session</button>
+</form>
+<h2>Your Study Sessions</h2>
+{% if records is none %}
+<p>Your sessions are temporarily unavailable.</p>
+{% elif not records %}
+<p>No study sessions yet. Add your first session above.</p>
+{% else %}
+{% for record in records %}
+<article class="study-session">
+  <h3>{{ record.subject }}</h3>
+  <p>{{ record.minutes }} minutes · <time datetime="{{ record.study_date }}">{{ record.study_date }}</time></p>
+  {% if record.notes %}<p class="notes">{{ record.notes }}</p>{% endif %}
+</article>
+{% endfor %}
+{% endif %}
 <form method="post" action="{{ url_for('logout') }}">
   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
   <button type="submit">Log out</button>

@@ -435,8 +435,8 @@ Completion check:
 
 Status: Implemented; live acceptance verification pending. Registration, login,
 POST logout, CSRF protection, and a Supabase-verified dashboard are implemented.
-All 17 automated tests pass. Local browser redirect protection was verified;
-the live account registration/login/logout cycle still needs completion.
+Live registration and login succeeded. Logout and re-login acceptance checks
+remain pending. The full suite now has 26 passing automated tests.
 
 Goal:
 
@@ -468,6 +468,11 @@ Do not continue until authentication is working reliably.
 ---
 
 ## Phase 4 — Create and Read Study Sessions
+
+Status: Implemented (September 27, 2026). The dashboard creates and reads
+user-owned sessions, validates input, preserves failed form submissions, and
+uses the authenticated JWT for row-level security. All 26 automated tests pass.
+Live save/refresh and second-account isolation verification remain pending.
 
 Goal:
 

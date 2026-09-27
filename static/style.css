@@ -16,3 +16,7 @@ label { display: block; margin-top: 1rem; }
 input { box-sizing: border-box; width: 100%; padding: .65rem; font: inherit; }
 button { margin-top: 1rem; padding: .65rem 1.2rem; font: inherit; cursor: pointer; }
 .message { padding: .75rem; background: #e8eef5; border-left: 3px solid #47658a; }
+
+textarea { box-sizing: border-box; width: 100%; padding: .65rem; font: inherit; resize: vertical; }
+.study-session { border-top: 1px solid #ccc; padding: .5rem 0; overflow-wrap: anywhere; }
+.notes { white-space: pre-wrap; }

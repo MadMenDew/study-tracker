@@ -7,9 +7,10 @@ A simple study tracker for the Engineering Design 2 AI software assignment.
 Phases 1 and 2 are complete. The Flask home page works, the `study-tracker`
 Supabase project is configured, and `schema.sql` has been applied. The live
 Flask-to-Supabase connection check passed on September 25, 2026.
-Phase 3 authentication is implemented and passes 17 automated tests; live
-registration, confirmation, login, and logout verification is pending.
-Study session management comes in later phases.
+Phase 3 authentication and Phase 4 create/read study sessions are implemented.
+All 26 automated tests pass. Live registration and login have succeeded; live
+logout, session persistence, and two-account isolation checks remain pending.
+Edit and delete actions come in Phase 5.
 
 ## Local setup
 
@@ -82,6 +83,22 @@ visit `/` and verify the redirect to `/login`, then log in again.
 References: [Supabase signup](https://supabase.com/docs/reference/python/auth-signup),
 [password login](https://supabase.com/docs/reference/python/auth-signinwithpassword),
 and [logout](https://supabase.com/docs/reference/python/auth-signout).
+
+## Study sessions (Phase 4)
+
+After login, use the dashboard to add a subject (1–120 characters), whole
+minutes (1–1440), a valid study date, and optional notes (up to 5000 characters).
+Sessions appear newest study date first. Form input is preserved if validation
+or saving fails. Refreshing the dashboard reads records from Supabase.
+
+The server assigns the verified user's ID to inserts and filters reads by that
+ID. Each query also uses the user's JWT so the existing row-level security
+policies apply. No database migration is needed for this phase.
+
+Live acceptance check: add a session, refresh to verify persistence, then sign
+in with a second account and verify the first account's sessions are hidden.
+Automated tests cover these application behaviors with a mocked backend; they
+do not substitute for the live two-account database check.
 
 ## Local tests
 
