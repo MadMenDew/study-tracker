@@ -588,6 +588,9 @@ Improve study tracker interface
 
 ## Phase 7 — Deployment
 
+Status: Deployment files prepared and production configuration checked.
+Render sign-in, service creation, and deployed acceptance tests are pending.
+
 Goal:
 
 Deploy the working Flask app.

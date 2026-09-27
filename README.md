@@ -122,6 +122,25 @@ python -m unittest discover -s tests -v
 These tests use a mocked Supabase client. Run the live check above separately
 after changing project settings or setting up another Supabase project.
 
+## Deployment (Phase 7)
+
+Deployment preparation is complete; the Render service and live verification
+are pending. [render.yaml](render.yaml) configures a free Python web service,
+Gunicorn, a generated session secret, and HTTPS-only session cookies.
+
+1. Push the code to GitHub and create a Render Blueprint from this repository.
+2. Provide `SUPABASE_URL` and the publishable `SUPABASE_KEY` when prompted.
+   Keep `.env` local; do not upload it. Render generates its own `FLASK_SECRET_KEY`.
+3. Once deployed, set Supabase Authentication → URL Configuration → Site URL
+   to `https://YOUR-SERVICE.onrender.com/login`.
+4. Test registration, email confirmation, login, all CRUD actions, logout, and
+   isolation between two accounts on the hosted URL.
+
+For manual service creation, use `pip install -r requirements.txt` to build and
+`gunicorn --bind 0.0.0.0:$PORT --workers 2 --timeout 60 app:app` to start.
+Set `FLASK_COOKIE_SECURE=1`, a random `FLASK_SECRET_KEY`, and the Supabase settings.
+See [Render's Flask deployment guide](https://render.com/docs/deploy-flask).
+
 ## Development plan
 
 See [the MVP development plan](study_tracker_codex_plan.md).
