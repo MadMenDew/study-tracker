@@ -11,6 +11,10 @@ and optional notes. Users can only see and modify their own sessions.
 The app is deployed on Render and uses Supabase for authentication and database
 storage. The deployment uses HTTPS, Gunicorn, and a generated production secret.
 
+## Demo video
+
+**YouTube demo:** (https://youtu.be/v5m8SEJEeOg)
+
 ## Features
 
 - Account registration and email confirmation
@@ -83,9 +87,3 @@ After deployment, set Supabase Authentication → URL Configuration → Site URL
 the hosted login URL and test registration, login, database CRUD, logout, and
 user-data isolation on the deployed URL.
 
-## Demo video
-
-The 3–5 minute unlisted YouTube demo should follow [DEMO_VIDEO_OUTLINE.md](DEMO_VIDEO_OUTLINE.md).
-Add the final unlisted YouTube URL here before submitting:
-
-**YouTube demo:** `PASTE_UNLISTED_YOUTUBE_URL_HERE`
